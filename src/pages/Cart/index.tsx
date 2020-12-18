@@ -1,4 +1,5 @@
-import React, { useMemo } from 'react';
+/* eslint-disable array-callback-return */
+import React, { useMemo, useState } from 'react';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 
 import { View } from 'react-native';
@@ -37,26 +38,59 @@ interface Product {
 
 const Cart: React.FC = () => {
   const { increment, decrement, products } = useCart();
+  const [valuesSum, setValuesSum] = useState(0.0);
+  const [quantitySum, setQuantitySum] = useState(0);
 
   function handleIncrement(id: string): void {
-    // TODO
+    increment(id);
+    const newQtt = quantitySum + 1;
+    setQuantitySum(newQtt);
+
+    let newValueSum = 0;
+
+    products.map(prod => {
+      newValueSum += prod.price * prod.quantity;
+    });
+
+    setValuesSum(newValueSum);
   }
 
   function handleDecrement(id: string): void {
-    // TODO
+    decrement(id);
+    const newQtt = quantitySum - 1;
+    setQuantitySum(newQtt);
+
+    let newValueSum = 0;
+
+    products.map(prod => {
+      newValueSum += prod.price * prod.quantity;
+    });
+
+    setValuesSum(newValueSum);
   }
 
   const cartTotal = useMemo(() => {
-    // TODO RETURN THE SUM OF THE QUANTITY OF THE PRODUCTS IN THE CART
+    let newValueSum = 0;
 
-    return formatValue(0);
-  }, [products]);
+    products.map(prod => {
+      newValueSum += prod.price * prod.quantity;
+    });
+
+    setValuesSum(newValueSum);
+    return formatValue(valuesSum);
+  }, [products, valuesSum]);
 
   const totalItensInCart = useMemo(() => {
-    // TODO RETURN THE SUM OF THE QUANTITY OF THE PRODUCTS IN THE CART
+    let newQuantitySum = 0;
 
-    return 0;
-  }, [products]);
+    products.map(prod => {
+      newQuantitySum += prod.quantity;
+    });
+
+    setQuantitySum(newQuantitySum);
+
+    return quantitySum;
+  }, [products, quantitySum]);
 
   return (
     <Container>

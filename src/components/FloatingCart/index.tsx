@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 import React, { useState, useMemo } from 'react';
 
 import { useNavigation } from '@react-navigation/native';
@@ -20,20 +21,32 @@ import { useCart } from '../../hooks/cart';
 
 const FloatingCart: React.FC = () => {
   const { products } = useCart();
-
+  const [valuesSum, setValuesSum] = useState(0.0);
+  const [quantitySum, setQuantitySum] = useState(0);
   const navigation = useNavigation();
 
   const cartTotal = useMemo(() => {
-    // TODO RETURN THE SUM OF THE PRICE FROM ALL ITEMS IN THE CART
+    let newValueSum = 0;
 
-    return formatValue(0);
-  }, [products]);
+    products.map(prod => {
+      newValueSum += prod.price * prod.quantity;
+    });
+
+    setValuesSum(newValueSum);
+    return formatValue(valuesSum);
+  }, [products, valuesSum]);
 
   const totalItensInCart = useMemo(() => {
-    // TODO RETURN THE SUM OF THE QUANTITY OF THE PRODUCTS IN THE CART
+    let newQuantitySum = 0;
 
-    return 0;
-  }, [products]);
+    products.map(prod => {
+      newQuantitySum += prod.quantity;
+    });
+
+    setQuantitySum(newQuantitySum);
+
+    return quantitySum;
+  }, [products, quantitySum]);
 
   return (
     <Container>
